@@ -1,2 +1,2 @@
-# anomaly-detection
- Implementation of anomaly-detection aka 'one class classifier' on soccer ball images
+# One Class Classification
+ Implementation of one class classifier using Keras, to detect bananas and everything else

@@ -1,0 +1,6 @@
+
+*.png
+*.jpg
+*.xml
+*.iml
+data/train_test_split.pickle
