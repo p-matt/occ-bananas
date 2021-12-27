@@ -3,5 +3,5 @@
 
 *.pickle
 
-MNet_model.h5
+CNet_model.h5
 /asset/data/CNet_model.h5
