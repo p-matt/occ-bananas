@@ -1,0 +1,4 @@
+/jupyter
+/asset/data/images
+
+*.pickle

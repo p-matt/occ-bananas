@@ -2,10 +2,9 @@ import base64
 import numpy as np
 from skimage.io import imread
 import cv2
-from keras.models import load_model
+from tensorflow.keras.models import load_model
 import os
 from pathlib import Path
-import matplotlib.pyplot as plt
 
 cwd = Path(os.getcwd())
 MNet_location = os.path.join(str(cwd.parent.absolute()), "asset", "data", "MNet_model.h5")
