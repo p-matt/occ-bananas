@@ -2,3 +2,6 @@
 /asset/data/images
 
 *.pickle
+
+MNet_model.h5
+/asset/data/MNet_model.h5
