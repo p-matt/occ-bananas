@@ -4,4 +4,4 @@
 *.pickle
 
 MNet_model.h5
-/asset/data/MNet_model.h5
+/asset/data/CNet_model.h5
