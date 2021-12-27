@@ -5,7 +5,11 @@ body{
 #main-title{
     text-align: center;
     margin-top: 2em;
-    margin-bottom: 2em;
+    margin-bottom: 1em;
+}
+
+#container{
+    height: 2em;
 }
 
 #upload-image{

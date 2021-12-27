@@ -24,6 +24,13 @@
 
 
 - Deploy the interface to be accessible online (Heroku)  
+The interface is accessible from this [link](https://occ-bananas.herokuapp.com/) (it might takes several seconds to load the page if it has not been loaded since a while)  
+
+## Content
+
+- `/jupyter`: 2 notebooks used to [pre-process](jupyter/preprocess.ipynb) the data and [train models](jupyter/models.ipynb)  
+- `/python`: Dash interface that uses requirements.txt  
+- `/asset`: essentially 3 different Keras trained models  
 
 ### Remarks
 The dataset I used is really biased, most of the bananas image have a white background so the training will lead to learn that is common for a banana image to have many white pixel.  
@@ -32,7 +39,15 @@ That's why I decided to apply a grayscale to each image and try to reduce this b
 
 
 ## Improvements
+Collect more data and remake the training :heavy_multiplication_x:  
 Multiple bananas predictions from the interface :heavy_multiplication_x:  
 Collect uploaded data from prediction on the interface for later use (re-train models) :heavy_multiplication_x:  
 Display an overview of some recent predictions on the interface :heavy_multiplication_x:  
 Display pre-processing step by step on the interface :heavy_multiplication_x:  
+
+
+### *References*:
+https://occ-bananas.herokuapp.com/  
+https://www.tensorflow.org/tutorials/images/data_augmentation  
+https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html    
+https://keras.io/api/applications/  

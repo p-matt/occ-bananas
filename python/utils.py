@@ -19,7 +19,6 @@ def compute(file):
         return "Not an image / Error"
     else:
         X, img_resized = preprocess(img)
-        print(X.shape)
         label, y_pred = prediction(X)
         return img_resized[..., ::-1], label, y_pred
 
@@ -27,8 +26,10 @@ def compute(file):
 def parse_contents(file):
     f = file.split("base64")
     file_type = f[0].split("/")[0].split(":")[1]
+    extension = f[0].split("/")[1][:-1]
     b64_str = f[1][1:]
-    if file_type != "image":
+
+    if file_type != "image" or extension not in ["jpg", "jpeg", "png", "webp"]:
         return "You must upload an image"
 
     img_data = base64.b64decode(b64_str)

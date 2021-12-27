@@ -1,9 +1,13 @@
 import os
+import sys
+
+sys.path.append(os.path.dirname(__file__))
+
 import dash
 from dash import html, dcc
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
-from utils import compute, cwd
+from utils import cwd, compute
 import plotly.express as px
 
 asset = os.path.join(str(cwd.parent.absolute()), "asset", "web")
@@ -19,7 +23,8 @@ app.layout = html.Div(
                 # dcc.Link([html.Img(src=app.get_asset_url('/img/home.png'))], href="/"),
                 html.H1("Bananas Classifier", id="main-title")
             ]),
-        html.H2(),
+        html.Div([dcc.Loading(id="loading-1", type="default", color="orange", children=html.Div(id="loading-output-1"))], id="container"),
+
         dcc.Upload(id='upload-image',
                    children=html.Div(
                        [
@@ -28,11 +33,12 @@ app.layout = html.Div(
                        ]),
                    multiple=False
                    ),
+
         html.Div(id='page-content')
     ])
 
 
-@app.callback(Output('page-content', 'children'),
+@app.callback([Output('page-content', 'children'), Output('loading-output-1', 'children')],
               Input('upload-image', 'contents'),
               State('page-content', 'children'))
 def update_output(file, current_output):
@@ -40,12 +46,13 @@ def update_output(file, current_output):
     if file is not None:
         result = compute(file)
         if isinstance(result, str):
-            return result
+            return result, ""
         else:
             X, *res = result
             header = "I think your image contains a banana" if res[0] == 1 else "I don't see any delicious banana here"
             fig = px.imshow(X).update_xaxes(showticklabels=False).update_yaxes(showticklabels=False)
-            fig.update_layout({"plot_bgcolor": "rgba(0, 0, 0, 0)", "paper_bgcolor": "rgba(0, 0, 0, 0)", "margin": {"l":0, "r":0, "b":0, "t":0}})
+            fig.update_layout({"plot_bgcolor": "rgba(0, 0, 0, 0)", "paper_bgcolor": "rgba(0, 0, 0, 0)",
+                               "margin": {"l": 0, "r": 0, "b": 0, "t": 0}})
             output = [html.Div(
                 [
                     html.Div(header, className="card-header"),
@@ -55,8 +62,10 @@ def update_output(file, current_output):
                         ], className="card-body"),
                 ], className="card border-warning mb-3")]
     if current_output:
+        if isinstance(current_output, str):
+            current_output = []
         output += current_output
-    return output
+    return output, ""
 
 
 if __name__ == "__main__":
