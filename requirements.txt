@@ -1,6 +1,5 @@
 dash==2.0.0
 dash_bootstrap_components==1.0.2
-keras==2.7.0
 tensorflow-cpu==2.7.0
 matplotlib==3.3.2
 numpy==1.19.2
