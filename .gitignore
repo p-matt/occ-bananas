@@ -3,4 +3,5 @@
 *.jpg
 *.xml
 *.iml
-data/train_test_split.pickle
+asset/data/train_test_split.pickle
+*.pyc
