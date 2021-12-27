@@ -3,13 +3,15 @@ import dash
 from dash import html, dcc
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
-from python.utils import compute, cwd
+from utils import compute, cwd
 import plotly.express as px
 
 asset = os.path.join(str(cwd.parent.absolute()), "asset", "web")
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.QUARTZ], assets_folder=asset)
 app.title = 'One Class Classification for bananas'
 server = app.server
+port = 8080
+
 app.layout = html.Div(
     [
         html.Nav(
@@ -58,4 +60,4 @@ def update_output(file, current_output):
 
 
 if __name__ == "__main__":
-    app.run_server(debug=False)
+    app.run_server(port=port, host="0.0.0.0", debug=False)
