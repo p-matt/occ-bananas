@@ -1,6 +1,5 @@
 import base64
 import numpy as np
-from skimage.io import imread
 import cv2
 from tensorflow.keras.models import load_model
 import os
@@ -20,8 +19,9 @@ def compute(file):
         return "Not an image / Error"
     else:
         X, img_resized = preprocess(img)
+        print(X.shape)
         label, y_pred = prediction(X)
-        return img_resized, label, y_pred
+        return img_resized[..., ::-1], label, y_pred
 
 
 def parse_contents(file):
@@ -31,8 +31,9 @@ def parse_contents(file):
     if file_type != "image":
         return "You must upload an image"
 
-    imgdata = base64.b64decode(b64_str)
-    img = imread(imgdata, plugin='imageio')
+    img_data = base64.b64decode(b64_str)
+    img_array = np.fromstring(img_data, np.uint8)
+    img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
     return img
 
 
