@@ -36,7 +36,6 @@ def get_data():
     cursor.execute(query)
     rows = cursor.fetchall()
     for row in rows:
-        print(row)
         labels.append(row[1])
         correct.append(row[2])
         imgs.append(row[3])

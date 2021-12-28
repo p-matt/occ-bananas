@@ -35,7 +35,6 @@ def get_single_output(header, fig):
 
 
 def get_multiple_output():
-    print("a")
     global df
     df = get_data()
     outputs = []
@@ -49,41 +48,36 @@ def get_multiple_output():
     return outputs
 
 
-app.layout = html.Div(
-    [
-        dcc.Location(id='url', refresh=False),
-        html.Nav(
-            [
-                html.H1("Bananas Classifier", id="main-title")
-            ]),
-        html.Div(
-            [dcc.Loading(id="loading-1", type="default", color="orange", children=html.Div(id="loading-output-1"))],
-            id="container"),
+def get_app_layout():
+    return html.Div(
+        [
+            dcc.Location(id='url', refresh=False),
+            html.Nav(
+                [
+                    html.H1("Bananas Classifier", id="main-title")
+                ]),
+            html.Div(
+                [dcc.Loading(id="loading-1", type="default", color="orange", children=html.Div(id="loading-output-1"))],
+                id="container"),
 
-        dcc.Upload(id='upload-image',
-                   children=html.Div(
-                       [
-                           'Drag and Drop or ',
-                           html.A('Select Files')
-                       ]),
-                   multiple=False
-                   ),
+            dcc.Upload(id='upload-image',
+                       children=html.Div(
+                           [
+                               'Drag and Drop or ',
+                               html.A('Select Files')
+                           ]),
+                       multiple=False
+                       ),
 
-        html.Div([
-            html.Div(get_multiple_output(), id="page-content-container")
-        ], id='page-content')
-    ])
-
-
-@app.callback(dash.dependencies.Output('page-content-container', 'children'),
-              [dash.dependencies.Input('url', 'pathname')])
-def display_page(pathname):
-    return get_multiple_output()
+            html.Div([
+                html.Div(get_multiple_output(), id="page-content-online")
+            ], id='page-content')
+        ])
 
 
-@app.callback([Output('page-content-container', 'children'), Output('loading-output-1', 'children')],
+@app.callback([Output('page-content-online', 'children'), Output('loading-output-1', 'children')],
               Input('upload-image', 'contents'),
-              State('page-content-container', 'children'))
+              State('page-content-online', 'children'))
 def update_output(file, current_output: list):
     if file is None:
         return current_output, ""
@@ -98,8 +92,10 @@ def update_output(file, current_output: list):
         output = get_single_output(header, fig)
 
     current_output.insert(0, output)
+    app.layout = get_app_layout()
     return current_output, ""
 
 
+app.layout = get_app_layout()
 if __name__ == "__main__":
     app.run_server(port=port, host="0.0.0.0", debug=False)
