@@ -42,8 +42,9 @@ That's why I decided to apply a grayscale to each image and try to reduce this b
 Collect more data and remake the training :heavy_multiplication_x:  
 Multiple bananas predictions from the interface :heavy_multiplication_x:  
 Collect uploaded data from prediction on the interface for later use (re-train models) :heavy_multiplication_x:  
-Display an overview of some recent predictions on the interface :heavy_multiplication_x:  
+Display an overview of some recent predictions on the interface through an external database :banana:
 Display pre-processing step by step on the interface :heavy_multiplication_x:  
+Give user ability to supervise the prediction and save his supervision (basically correct/incorrect) :heavy_multiplication_x:
 
 
 ### *References*:

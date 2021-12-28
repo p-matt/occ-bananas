@@ -1,14 +1,18 @@
 import os
 import sys
 
+import pickle
+
 sys.path.append(os.path.dirname(__file__))
 
 import dash
 from dash import html, dcc
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
-from utils import cwd, compute
-import plotly.express as px
+from utils import cwd, compute, get_fig, headers
+from database import get_data, cursor
+from random import choice
+from numpy import asarray, reshape, uint8
 
 asset = os.path.join(str(cwd.parent.absolute()), "asset", "web")
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.QUARTZ], assets_folder=asset)
@@ -16,14 +20,45 @@ app.title = 'One Class Classification for bananas'
 server = app.server
 port = 8080
 
+df = None
+
+
+def get_single_output(header, fig):
+    return html.Div(
+        [
+            html.Div(header, className="card-header"),
+            html.Div(
+                [
+                    dcc.Graph(figure=fig)
+                ], className="card-body"),
+        ], className="card border-warning mb-3")
+
+
+def get_multiple_output():
+    print("a")
+    global df
+    df = get_data()
+    outputs = []
+    for i, row in df.iterrows():
+        header = choice(headers[str(row["labels"])])
+        is_correct = row["correct"]
+        img = pickle.loads(row["imgs"])
+        fig = get_fig(img)
+        output = get_single_output(header, fig)
+        outputs.append(output)
+    return outputs
+
+
 app.layout = html.Div(
     [
+        dcc.Location(id='url', refresh=False),
         html.Nav(
             [
-                # dcc.Link([html.Img(src=app.get_asset_url('/img/home.png'))], href="/"),
                 html.H1("Bananas Classifier", id="main-title")
             ]),
-        html.Div([dcc.Loading(id="loading-1", type="default", color="orange", children=html.Div(id="loading-output-1"))], id="container"),
+        html.Div(
+            [dcc.Loading(id="loading-1", type="default", color="orange", children=html.Div(id="loading-output-1"))],
+            id="container"),
 
         dcc.Upload(id='upload-image',
                    children=html.Div(
@@ -34,38 +69,36 @@ app.layout = html.Div(
                    multiple=False
                    ),
 
-        html.Div(id='page-content')
+        html.Div([
+            html.Div(get_multiple_output(), id="page-content-container")
+        ], id='page-content')
     ])
 
 
-@app.callback([Output('page-content', 'children'), Output('loading-output-1', 'children')],
+@app.callback(dash.dependencies.Output('page-content-container', 'children'),
+              [dash.dependencies.Input('url', 'pathname')])
+def display_page(pathname):
+    return get_multiple_output()
+
+
+@app.callback([Output('page-content-container', 'children'), Output('loading-output-1', 'children')],
               Input('upload-image', 'contents'),
-              State('page-content', 'children'))
-def update_output(file, current_output):
-    output = ""
-    if file is not None:
-        result = compute(file)
-        if isinstance(result, str):
-            return result, ""
-        else:
-            X, *res = result
-            header = "I think your image contains a banana" if res[0] == 1 else "I don't see any delicious banana here"
-            fig = px.imshow(X).update_xaxes(showticklabels=False).update_yaxes(showticklabels=False)
-            fig.update_layout({"plot_bgcolor": "rgba(0, 0, 0, 0)", "paper_bgcolor": "rgba(0, 0, 0, 0)",
-                               "margin": {"l": 0, "r": 0, "b": 0, "t": 0}})
-            output = [html.Div(
-                [
-                    html.Div(header, className="card-header"),
-                    html.Div(
-                        [
-                            dcc.Graph(figure=fig)
-                        ], className="card-body"),
-                ], className="card border-warning mb-3")]
-    if current_output:
-        if isinstance(current_output, str):
-            current_output = []
-        output += current_output
-    return output, ""
+              State('page-content-container', 'children'))
+def update_output(file, current_output: list):
+    if file is None:
+        return current_output, ""
+
+    result = compute(file)
+    if isinstance(result, str):
+        return current_output, ""
+    else:
+        X, *res = result
+        header = "I think your image contains a banana" if res[0] == 1 else "I don't see any delicious banana here"
+        fig = get_fig(X)
+        output = get_single_output(header, fig)
+
+    current_output.insert(0, output)
+    return current_output, ""
 
 
 if __name__ == "__main__":

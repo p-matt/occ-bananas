@@ -1,9 +1,12 @@
 import base64
 import numpy as np
+import plotly.express as px
 import cv2
 from tensorflow.keras.models import load_model
 import os
 from pathlib import Path
+from database import insert_table
+import pickle
 
 cwd = Path(os.getcwd())
 MNet_location = os.path.join(str(cwd.parent.absolute()), "asset", "data", "MNet_model.h5")
@@ -11,6 +14,9 @@ model_location = os.path.join(str(cwd.parent.absolute()), "asset", "data", "MNet
 
 MNet = load_model(MNet_location)
 model = load_model(model_location)
+
+headers = {"0": ["I don't see any tasty banana here", "There is no banana on this image", "I can't found any banana"],
+           "1": ["I think your image contains bananas", "What a delicious banana", "I see.. mhh.. a banana here"]}
 
 
 def compute(file):
@@ -20,7 +26,8 @@ def compute(file):
     else:
         X, img_resized = preprocess(img)
         label, y_pred = prediction(X)
-        return img_resized[..., ::-1], label, y_pred
+        insert_table(label, True, pickle.dumps(img_resized))
+        return img_resized, label, y_pred
 
 
 def parse_contents(file):
@@ -46,7 +53,7 @@ def preprocess(X, target_shape=(224, 224)):
     new_img = new_img / 255
     new_img = new_img[..., ::-1]
     new_img = np.expand_dims(np.array(new_img), axis=0)
-    return new_img, X_resized
+    return new_img, np.array(X_resized)[..., ::-1]
 
 
 def prediction(X):
@@ -54,3 +61,10 @@ def prediction(X):
     y_pred = model.predict(MNet_features)[0][0]
     label = 1 if y_pred > .5 else 0
     return label, y_pred
+
+
+def get_fig(X):
+    fig = px.imshow(X).update_xaxes(showticklabels=False).update_yaxes(showticklabels=False)
+    fig.update_layout({"plot_bgcolor": "rgba(0, 0, 0, 0)", "paper_bgcolor": "rgba(0, 0, 0, 0)",
+                       "margin": {"l": 0, "r": 0, "b": 0, "t": 0}})
+    return fig
