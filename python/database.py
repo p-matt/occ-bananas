@@ -25,9 +25,11 @@ def create_table():
 
 
 def insert_table(_Label: int, _IsCorrect: bool, _Image: bytes):
+    print("insert")
     query = """INSERT INTO predictions (Label, IsCorrect, Image) VALUES (%s, %s, %s)"""
     cursor.execute(query, (_Label, _IsCorrect, _Image))
     conn.commit()
+    print("done")
 
 
 def get_data():

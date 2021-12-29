@@ -48,8 +48,8 @@ def parse_contents(file):
 def preprocess(X, target_shape=(224, 224)):
     X_resized = cv2.resize(X, target_shape)
     new_img = cv2.cvtColor(X_resized, cv2.COLOR_BGRA2BGR)
-    new_img = cv2.cvtColor(new_img, cv2.COLOR_BGR2GRAY)
-    new_img = cv2.cvtColor(new_img, cv2.COLOR_GRAY2RGB)
+    # new_img = cv2.cvtColor(new_img, cv2.COLOR_BGR2GRAY)
+    # new_img = cv2.cvtColor(new_img, cv2.COLOR_GRAY2RGB)
     new_img = new_img / 255
     new_img = new_img[..., ::-1]
     new_img = np.expand_dims(np.array(new_img), axis=0)

@@ -10,9 +10,8 @@ from dash import html, dcc
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 from utils import cwd, compute, get_fig, headers
-from database import get_data, cursor
+from database import get_data
 from random import choice
-from numpy import asarray, reshape, uint8
 
 asset = os.path.join(str(cwd.parent.absolute()), "asset", "web")
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.QUARTZ], assets_folder=asset)
@@ -21,6 +20,8 @@ server = app.server
 port = 8080
 
 df = None
+
+i = 0
 
 
 def get_single_output(header, fig):
@@ -79,6 +80,7 @@ def get_app_layout():
               Input('upload-image', 'contents'),
               State('page-content-online', 'children'))
 def update_output(file, current_output: list):
+    global i
     if file is None:
         return current_output, ""
 
@@ -92,7 +94,9 @@ def update_output(file, current_output: list):
         output = get_single_output(header, fig)
 
     current_output.insert(0, output)
-    app.layout = get_app_layout()
+    i += 1
+
+    app.layout = get_app_layout() if i%4 == 0 else app.layout
     return current_output, ""
 
 
