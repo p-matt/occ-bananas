@@ -40,6 +40,7 @@ That's why I decided to apply a grayscale to each image and try to reduce this b
 
 
 ## Improvements
+Remake the preprocess of the images to exactly match with the preprocess applied to the pre trained model :heavy_multiplication_x:  
 Display an overview of some recent predictions on the interface through an external database :banana:  
 Collect more data and remake the training :banana:   
 Multiple bananas predictions from the interface :heavy_multiplication_x:  

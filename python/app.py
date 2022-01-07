@@ -96,7 +96,7 @@ def update_output(file, current_output: list):
     current_output.insert(0, output)
     i += 1
 
-    app.layout = get_app_layout() if i%4 == 0 else app.layout
+    app.layout = get_app_layout() if i % 4 == 0 else app.layout
     return current_output, ""
 
 
