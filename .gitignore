@@ -5,3 +5,6 @@
 *.iml
 asset/data/train_test_split.pickle
 *.pyc
+asset/data/models/MNet_Augmented.h5
+asset/data/models/CNet_Augmented.h5
+asset/data/models/CNet.h5

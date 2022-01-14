@@ -21,7 +21,7 @@ port = 8080
 
 df = None
 
-i = 0
+index = 0
 
 
 def get_single_output(header, fig):
@@ -80,7 +80,7 @@ def get_app_layout():
               Input('upload-image', 'contents'),
               State('page-content-online', 'children'))
 def update_output(file, current_output: list):
-    global i
+    global index
     if file is None:
         return current_output, ""
 
@@ -88,15 +88,14 @@ def update_output(file, current_output: list):
     if isinstance(result, str):
         return current_output, ""
     else:
-        X, *res = result
-        header = "I think your image contains a banana" if res[0] == 1 else "I don't see any delicious banana here"
+        X, pred = result
+        header = choice(headers[str(pred)])
         fig = get_fig(X)
         output = get_single_output(header, fig)
 
     current_output.insert(0, output)
-    i += 1
-
-    app.layout = get_app_layout() if i % 4 == 0 else app.layout
+    index += 1
+    app.layout = get_app_layout() if index % 4 == 0 else app.layout
     return current_output, ""
 
 
