@@ -4,7 +4,7 @@
 
 ## General approach:  
 - Collect data (Kaggle)  
-    - The dataset I use is made of 2000x bananas + 2000x augmented bananas with also a dataset of 4000x randoms images since it's needed to classify bananas and others things  
+    - The dataset I use is made of 2000x bananas + 4000x randoms images since it's needed to classify bananas and others things  
 
 
 - Pre-processing (OpenCV, Keras)  
